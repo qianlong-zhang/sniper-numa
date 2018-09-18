@@ -54,6 +54,13 @@ void MemoryManagerNetworkCallback(void* obj, NetPacket packet)
    }
 }
 
+//add for numa system by zql
+std::vector<core_id_t>
+MemoryManagerBase::getCoreListWithSocketAgents()
+{
+    return getCoreListWithMemoryControllers();
+}
+
 std::vector<core_id_t>
 MemoryManagerBase::getCoreListWithMemoryControllers()
 {
@@ -121,6 +128,7 @@ MemoryManagerBase::getCoreListWithMemoryControllers()
          {
             assert((i*memory_controllers_interleaving) < core_count);
             core_list_with_memory_controllers.push_back(i * memory_controllers_interleaving);
+            //fprintf(stderr, "core list with mc (%d)\n", i*memory_controllers_interleaving);
          }
       }
       else

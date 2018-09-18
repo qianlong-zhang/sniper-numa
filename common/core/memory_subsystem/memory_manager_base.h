@@ -32,6 +32,7 @@ class MemoryManagerBase
       ShmemPerfModel* getShmemPerfModel() { return m_shmem_perf_model; }
 
       std::vector<core_id_t> getCoreListWithMemoryControllers(void);
+      std::vector<core_id_t> getCoreListWithSocketAgents(void);
       void printCoreListWithMemoryControllers(std::vector<core_id_t>& core_list_with_memory_controllers);
 
    public:

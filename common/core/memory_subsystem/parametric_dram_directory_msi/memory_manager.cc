@@ -193,6 +193,7 @@ MemoryManager::MemoryManager(Core* core,
    m_network_thread_sem = new Semaphore(0);
 
    std::vector<core_id_t> core_list_with_dram_controllers = getCoreListWithMemoryControllers();
+   std::vector<core_id_t> core_list_with_socket_agents = getCoreListWithSocketAgents();  //add for numa system by zql, same as core_list_with_dram_controllers, in c0/c4
    std::vector<core_id_t> core_list_with_tag_directories;
    String tag_directory_locations = Sim()->getCfg()->getString("perf_model/dram_directory/locations");
 
