@@ -115,10 +115,15 @@ namespace config
             {
                 return m_root.getKey(path, index);
             }
-        }
+		}
+
+		fprintf(stdout, "\n m_root name is %s\n", m_root.getName().c_str());
+		fprintf(stdout, "\n index is %ld\n",index);
 
         //Disect the path
         PathPair path_pair = Config::splitPath(path);
+		std::cout<< "path_pair.first is "<<path_pair.first<<std::endl;
+		std::cout<< "path_pair.second is "<<path_pair.second<<std::endl;
         Section & section = getSection_unsafe(path_pair.first);
 
         if(!section.hasKey(path_pair.second, index))

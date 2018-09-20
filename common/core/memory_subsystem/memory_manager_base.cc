@@ -56,6 +56,12 @@ void MemoryManagerNetworkCallback(void* obj, NetPacket packet)
 
 //add for numa system by zql
 std::vector<core_id_t>
+MemoryManagerBase::NUMAgetCoreListWithMemoryControllers()
+{
+    std::vector<core_id_t> core_list_before_numa =  getCoreListWithMemoryControllers();
+	core_id_t current_core_id = getCore()->getId();
+}
+std::vector<core_id_t>
 MemoryManagerBase::getCoreListWithSocketAgents()
 {
     return getCoreListWithMemoryControllers();

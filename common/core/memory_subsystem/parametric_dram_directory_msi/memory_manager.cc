@@ -156,6 +156,8 @@ MemoryManager::MemoryManager(Core* core,
       }
 
       nuca_enable = Sim()->getCfg()->getBoolArray(  "perf_model/nuca/enabled", core->getId());
+
+
       if (nuca_enable)
       {
          nuca_parameters = CacheParameters(
@@ -192,8 +194,19 @@ MemoryManager::MemoryManager(Core* core,
    m_user_thread_sem = new Semaphore(0);
    m_network_thread_sem = new Semaphore(0);
 
-   std::vector<core_id_t> core_list_with_dram_controllers = getCoreListWithMemoryControllers();
-   std::vector<core_id_t> core_list_with_socket_agents = getCoreListWithSocketAgents();  //add for numa system by zql, same as core_list_with_dram_controllers, in c0/c4
+	bool numa_enable=false;
+	numa_enable = Sim()->getCfg()->getBool(  "perf_model/numa_config/numa_enable");
+
+	std::vector<core_id_t> core_list_with_dram_controllers;
+	if (numa_enable)
+	{
+		core_list_with_dram_controllers = NUMAgetCoreListWithMemoryControllers();
+	}
+	else
+	{
+		core_list_with_dram_controllers = getCoreListWithMemoryControllers();
+	}
+   //std::vector<core_id_t> core_list_with_socket_agents = getCoreListWithSocketAgents();  //add for numa system by zql, same as core_list_with_dram_controllers, in c0/c4
    std::vector<core_id_t> core_list_with_tag_directories;
    String tag_directory_locations = Sim()->getCfg()->getString("perf_model/dram_directory/locations");
 
