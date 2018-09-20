@@ -60,6 +60,8 @@ MemoryManagerBase::NUMAgetCoreListWithMemoryControllers()
 {
     std::vector<core_id_t> core_list_before_numa =  getCoreListWithMemoryControllers();
 	core_id_t current_core_id = getCore()->getId();
+    UInt32 socket_counts = Sim()->getCfg()->getInt("perf_model/dram/num_controllers");
+    if (current_core_id < Config::getSingleton()->getTotalCores()/)
 }
 std::vector<core_id_t>
 MemoryManagerBase::getCoreListWithSocketAgents()
