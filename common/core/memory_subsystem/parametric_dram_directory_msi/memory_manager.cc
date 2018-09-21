@@ -197,6 +197,8 @@ MemoryManager::MemoryManager(Core* core,
 	bool numa_enable=false;
 	numa_enable = Sim()->getCfg()->getBool(  "perf_model/numa_config/numa_enable");
 
+	std::cout<<"current core is "<<getCore()->getId()<<std::endl;
+
 	std::vector<core_id_t> core_list_with_dram_controllers;
 	if (numa_enable)
 	{
@@ -206,6 +208,13 @@ MemoryManager::MemoryManager(Core* core,
 	{
 		core_list_with_dram_controllers = getCoreListWithMemoryControllers();
 	}
+
+//	std::cout<<"dram controllers are on :"<<std::endl;
+//	for (std::vector<core_id_t>::iterator iter=core_list_with_dram_controllers.begin();iter != core_list_with_dram_controllers.end();iter++ )
+//	{
+//		std::cout<<*iter<<std::endl;
+//	}
+
    //std::vector<core_id_t> core_list_with_socket_agents = getCoreListWithSocketAgents();  //add for numa system by zql, same as core_list_with_dram_controllers, in c0/c4
    std::vector<core_id_t> core_list_with_tag_directories;
    String tag_directory_locations = Sim()->getCfg()->getString("perf_model/dram_directory/locations");
@@ -242,12 +251,15 @@ MemoryManager::MemoryManager(Core* core,
    m_tag_directory_home_lookup = new AddressHomeLookup(dram_directory_home_lookup_param, core_list_with_tag_directories, getCacheBlockSize());
    m_dram_controller_home_lookup = new AddressHomeLookup(dram_directory_home_lookup_param, core_list_with_dram_controllers, getCacheBlockSize());
 
-   // if (m_core->getId() == 0)
+   //if (getCore()->getId() == 0)
    //   printCoreListWithMemoryControllers(core_list_with_dram_controllers);
 
    if (find(core_list_with_dram_controllers.begin(), core_list_with_dram_controllers.end(), getCore()->getId()) != core_list_with_dram_controllers.end())
    {
+
       m_dram_cntlr_present = true;
+
+		std::cout<<"Core with dram controller is "<<getCore()->getId()<<std::endl;
 
       m_dram_cntlr = new PrL1PrL2DramDirectoryMSI::DramCntlr(this,
             getShmemPerfModel(),

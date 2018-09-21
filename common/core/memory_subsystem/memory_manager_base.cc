@@ -58,12 +58,60 @@ void MemoryManagerNetworkCallback(void* obj, NetPacket packet)
 std::vector<core_id_t>
 MemoryManagerBase::NUMAgetCoreListWithMemoryControllers()
 {
+//<<<<<<< Updated upstream
     //std::vector<core_id_t> core_list_before_numa =  getCoreListWithMemoryControllers();
 	//core_id_t current_core_id = getCore()->getId();
     //UInt32 socket_counts = Sim()->getCfg()->getInt("perf_model/dram/num_controllers");
     //if (current_core_id < Config::getSingleton()->getTotalCores()/)
-    return getCoreListWithMemoryControllers();
+    //return getCoreListWithMemoryControllers();
+//=======
+    std::vector<core_id_t> core_list_before_numa =  getCoreListWithMemoryControllers();
+	std::cout<<"core list before erased is "<<std::endl;
+	for(std::vector<core_id_t>::iterator  iter =core_list_before_numa.begin(); iter!= core_list_before_numa.end(); iter++ )
+	{
+		std::cout<<*iter<<std::endl;;
+	}
+
+	std::vector<core_id_t> core_list_after_numa = core_list_before_numa;
+	core_id_t current_core_id = getCore()->getId();
+    int socket_counts = Sim()->getCfg()->getInt("perf_model/numa_config/sockets");
+	int all_cores = Config::getSingleton()->getTotalCores();
+    if (current_core_id < (all_cores/socket_counts))
+	{
+		//core_list_after_numa = core_list_before_numa - cores on local node
+		for(std::vector<core_id_t>::iterator iter =core_list_after_numa.begin(); iter!= core_list_after_numa.end(); iter++ )
+		{
+			if (*iter < (all_cores/socket_counts))
+			{
+				fprintf(stdout, "core list erasing (%d)\n", *iter);
+				core_list_after_numa.erase(iter);
+			}
+		}
+	}
+	else
+	{
+		//core_list_after_numa = core_list_before_numa - cores on local node
+		for(std::vector<core_id_t>::iterator  iter =core_list_after_numa.begin(); iter!= core_list_after_numa.end(); )
+		{
+			if (*iter >= (all_cores/socket_counts) && *iter<all_cores)
+			{
+				fprintf(stdout, "core list erasing (%d)\n", *iter);
+				core_list_after_numa.erase(iter);
+			}
+			else
+				iter++;
+		}
+	}
+
+	std::cout<<"core list after erased is "<<std::endl;
+	for(std::vector<core_id_t>::iterator  iter =core_list_after_numa.begin(); iter!= core_list_after_numa.end(); iter++ )
+	{
+		std::cout<<*iter<<std::endl;;
+	}
+	std::cout<<std::endl;
+	return core_list_after_numa;
 }
+
 std::vector<core_id_t>
 MemoryManagerBase::getCoreListWithSocketAgents()
 {
